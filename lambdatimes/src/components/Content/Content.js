@@ -14,6 +14,8 @@ export default class Content extends Component {
 			tabs: [],
 			cards: []
 		};
+		console.log(this.state.tabs);
+		console.log(this.state.cards);
 	}
 
 	componentDidMount() {
@@ -22,13 +24,11 @@ export default class Content extends Component {
 			tabs: tabData,
 			cards: cardData
 		});
-		console.log(this.state.tabs);
-		console.log(this.state.cards);
 	}
 
 	changeSelected = tab => {
 		// this function should take in the tab and update the state with the new tab.
-		this.setState({ selected: this.tabs[tab] });
+		this.setState({ selected: tab });
 	};
 
 	filterCards = () => {
@@ -45,16 +45,14 @@ export default class Content extends Component {
         - else, it should only return those cards whose 'tab' matched this.state.selected.
     */
 
-    if(this.state.selected === "all"){
-      return this.state.cards
-    } else {
-      this.state.cards.filter(card => {
-        if(card.tab === this.state.selected){
-          this.setState({card})
-        }
-      })
-    }
-		return this.state.cards;
+		if (this.state.selected === "all") {
+			return this.state.cards;
+		} else {
+			let filteredCard = this.state.cards.slice();
+			filteredCard = filteredCard.filter(card => card.tab === this.state.selected);
+			return this.setState(filteredCard);
+		}
+		// return this.state.cards;
 	};
 
 	render() {
@@ -65,11 +63,7 @@ export default class Content extends Component {
           `selectedTab` that includes the currently selected tab
           and `selectTabHandler` that includes the function to change the selected tab
         */}
-        <Tabs 
-          tabs={this.state.tabs}
-          selectedTab={this.state.selected}
-
-        />
+				<Tabs tabs={this.state.tabs} selectedTab={this.state.selected} selectTabHandler={this.changeSelected} />
 				<Cards cards={this.filterCards()} />
 			</div>
 		);
